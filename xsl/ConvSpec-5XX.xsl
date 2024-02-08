@@ -459,7 +459,8 @@
                        marc:datafield[@tag='556' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='556')] |
                        marc:datafield[@tag='581' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='581')] |
                        marc:datafield[@tag='585' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='585')] |
-                       marc:datafield[@tag='588' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='588')]"
+                       marc:datafield[@tag='588' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='588')] |
+                       marc:datafield[@tag='590']"
                 mode="instance">
     <xsl:param name="serialization" select="'rdfxml'"/>
     <xsl:param name="pHasItem" select="false()"/>
