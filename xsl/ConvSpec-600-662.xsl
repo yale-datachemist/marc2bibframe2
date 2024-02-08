@@ -15,7 +15,10 @@
 
   <xsl:template match="marc:datafield[@tag='600' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='600')] |
                        marc:datafield[@tag='610' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='610')] |
-                       marc:datafield[@tag='611' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='611')]"
+                       marc:datafield[@tag='611' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='611')] |
+                       marc:datafield[@tag='692'] |
+                       marc:datafield[@tag='693'] |
+                       marc:datafield[@tag='694']"
                 mode="work">
     <xsl:param name="recordid"/>
     <xsl:param name="pPosition" select="position()"/>
@@ -65,26 +68,26 @@
       <xsl:choose>
         <xsl:when test="marc:subfield[@code='v' or @code='x' or @code='y' or @code='z']">ComplexSubject</xsl:when>
         <xsl:when test="marc:subfield[@code='t']">NameTitle</xsl:when>
-        <xsl:when test="$vTag='600'">
+        <xsl:when test="$vTag='600' or $vTag='692'">
           <xsl:choose>
             <xsl:when test="@ind1='3'">FamilyName</xsl:when>
             <xsl:otherwise>PersonalName</xsl:otherwise>
           </xsl:choose>
         </xsl:when>
-        <xsl:when test="$vTag='610'">CorporateName</xsl:when>
-        <xsl:when test="$vTag='611'">ConferenceName</xsl:when>
+        <xsl:when test="$vTag='610' or $vTag='693'">CorporateName</xsl:when>
+        <xsl:when test="$vTag='611' or $vTag='694'">ConferenceName</xsl:when>
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="vMADSNameClass">
       <xsl:choose>
-        <xsl:when test="$vTag='600'">
+        <xsl:when test="$vTag='600' or $vTag='692'">
           <xsl:choose>
             <xsl:when test="@ind1='3'">FamilyName</xsl:when>
             <xsl:otherwise>PersonalName</xsl:otherwise>
           </xsl:choose>
         </xsl:when>
-        <xsl:when test="$vTag='610'">CorporateName</xsl:when>
-        <xsl:when test="$vTag='611'">ConferenceName</xsl:when>
+        <xsl:when test="$vTag='610' or $vTag='693'">CorporateName</xsl:when>
+        <xsl:when test="$vTag='611' or $vTag='694'">ConferenceName</xsl:when>
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="vNameLabel">
@@ -345,7 +348,7 @@
     </xsl:choose>
   </xsl:template>
     
-  <xsl:template match="marc:datafield[@tag='630' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='630')]" mode="work">
+  <xsl:template match="marc:datafield[@tag='630' or @tag='695' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='630')]" mode="work">
     <xsl:param name="recordid"/>
     <xsl:param name="pPosition" select="position()"/>
     <xsl:param name="serialization" select="'rdfxml'"/>
@@ -553,7 +556,9 @@
                        marc:datafield[@tag='648' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='648')] |
                        marc:datafield[@tag='650' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='650')] |
                        marc:datafield[@tag='651' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='651')] |
-                       marc:datafield[@tag='655' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='655')][@ind1=' ']"
+                       marc:datafield[@tag='655' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='655')][@ind1=' '] |
+                       marc:datafield[@tag='690'] |
+                       marc:datafield[@tag='691']"
                 mode="work">
     <xsl:param name="recordid"/>
     <xsl:param name="pPosition" select="position()"/>
@@ -570,7 +575,7 @@
           <xsl:when test="@tag='648'">
             <xsl:value-of select="$recordid"/>#Temporal<xsl:value-of select="@tag"/>-<xsl:value-of select="$pPosition"/>
           </xsl:when>
-          <xsl:when test="@tag='651'">
+          <xsl:when test="@tag='651' or @tag='691'">
             <xsl:value-of select="$recordid"/>#Place<xsl:value-of select="@tag"/>-<xsl:value-of select="$pPosition"/>
           </xsl:when>
           <xsl:when test="@tag='655'">
@@ -616,7 +621,7 @@
         <xsl:when test="marc:subfield[@code='v' or @code='x' or @code='y' or @code='z']">bf:Topic</xsl:when>
         <xsl:when test="$vTag='647'">bf:Event</xsl:when>
         <xsl:when test="$vTag='648'">bf:Temporal</xsl:when>
-        <xsl:when test="$vTag='651'">bf:Place</xsl:when>
+        <xsl:when test="$vTag='651' or $vTag='691'">bf:Place</xsl:when>
         <xsl:when test="$vTag='655'">bf:GenreForm</xsl:when>
         <xsl:otherwise>bf:Topic</xsl:otherwise>
       </xsl:choose>
@@ -626,13 +631,13 @@
       <xsl:choose>
         <xsl:when test="marc:subfield[@code='v' or @code='x' or @code='y' or @code='z']">ComplexSubject</xsl:when>
         <xsl:when test="$vTag='648'">Temporal</xsl:when>
-        <xsl:when test="$vTag='650'">
+        <xsl:when test="$vTag='650' or $vTag='690'">
           <xsl:choose>
             <xsl:when test="marc:subfield[@code='b' or @code='c' or @code='d']">ComplexSubject</xsl:when>
             <xsl:otherwise>Topic</xsl:otherwise>
           </xsl:choose>
         </xsl:when>
-        <xsl:when test="$vTag='651'">
+        <xsl:when test="$vTag='651' or $vTag='691'">
           <xsl:choose>
             <xsl:when test="marc:subfield[@code='b']">ComplexSubject</xsl:when>
             <xsl:otherwise>Geographic</xsl:otherwise>
@@ -662,12 +667,12 @@
                 <xsl:value-of select="concat(.,'--')"/>
               </xsl:for-each>
             </xsl:when>
-            <xsl:when test="$vTag='650'">
+            <xsl:when test="$vTag='650' or $vTag='690'">
               <xsl:for-each select="marc:subfield[@code='a' or @code='b' or @code='c' or @code='d' or @code='v' or @code='x' or @code='y' or @code='z']">
                 <xsl:value-of select="concat(.,'--')"/>
               </xsl:for-each>
             </xsl:when>
-            <xsl:when test="$vTag='651'">
+            <xsl:when test="$vTag='651' or $vTag='691'">
               <xsl:for-each select="marc:subfield[@code='a' or @code='b' or @code='v' or @code='x' or @code='y' or @code='z']">
                 <xsl:value-of select="concat(.,'--')"/>
               </xsl:for-each>
@@ -731,14 +736,14 @@
                         <xsl:with-param name="pXmlLang" select="$vXmlLang"/>
                       </xsl:apply-templates>
                   </xsl:when>
-                  <xsl:when test="$vTag='650'">
+                  <xsl:when test="$vTag='650' or $vTag='690'">
                     <xsl:apply-templates select="marc:subfield[@code='a' or @code='b' or @code='c' or @code='d' or @code='v' or @code='x' or @code='y' or @code='z']" mode="complexSubject">
                       <xsl:with-param name="serialization" select="$serialization"/>
                       <xsl:with-param name="pTag" select="$vTag"/>
                       <xsl:with-param name="pXmlLang" select="$vXmlLang"/>
                     </xsl:apply-templates>
                   </xsl:when>
-                  <xsl:when test="$vTag='651'">
+                  <xsl:when test="$vTag='651' or $vTag='691'">
                     <xsl:apply-templates select="marc:subfield[@code='a' or @code='b' or @code='v' or @code='x' or @code='y' or @code='z']" mode="complexSubject">
                       <xsl:with-param name="serialization" select="$serialization"/>
                       <xsl:with-param name="pTag" select="$vTag"/>
@@ -1076,14 +1081,14 @@
         <xsl:when test="@code='z'">madsrdf:Geographic</xsl:when>
         <xsl:when test="$pTag='647'">bf:Event</xsl:when>
         <xsl:when test="$pTag='648'">madsrdf:Temporal</xsl:when>
-        <xsl:when test="$pTag='650'">
+        <xsl:when test="$pTag='650' or $pTag='690'">
           <xsl:choose>
             <xsl:when test="@code='c'">madsrdf:Geographic</xsl:when>
             <xsl:when test="@code='d'">madsrdf:Temporal</xsl:when>
             <xsl:otherwise>madsrdf:Topic</xsl:otherwise>
           </xsl:choose>
         </xsl:when>
-        <xsl:when test="$pTag='651'">madsrdf:Geographic</xsl:when>
+        <xsl:when test="$pTag='651' or $pTag='691'">madsrdf:Geographic</xsl:when>
         <xsl:when test="$pTag='655'">madsrdf:GenreForm</xsl:when>
         <xsl:when test="$pTag='656'">
           <xsl:choose>

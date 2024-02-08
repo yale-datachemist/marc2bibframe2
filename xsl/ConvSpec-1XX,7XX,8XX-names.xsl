@@ -559,7 +559,7 @@
               <xsl:when test="$tag='720' and @ind1='1'">
                 <xsl:attribute name="rdf:resource"><xsl:value-of select="$bf"/>Person</xsl:attribute>
               </xsl:when>
-              <xsl:when test="substring($tag,2,2)='00'">
+              <xsl:when test="substring($tag,2,2)='00' or $tag='692'">
                 <xsl:choose>
                   <xsl:when test="@ind1='3'">
                     <xsl:attribute name="rdf:resource"><xsl:value-of select="$bf"/>Family</xsl:attribute>
@@ -569,7 +569,7 @@
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:when>
-              <xsl:when test="substring($tag,2,2)='10'">
+              <xsl:when test="substring($tag,2,2)='10' or $tag='693'">
                 <xsl:choose>
                   <xsl:when test="@ind1='1'">
                     <xsl:attribute name="rdf:resource"><xsl:value-of select="concat($bf,'Jurisdiction')"/></xsl:attribute>
@@ -579,7 +579,7 @@
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:when>
-              <xsl:when test="substring($tag,2,2)='11'">
+              <xsl:when test="substring($tag,2,2)='11' or $tag='694'">
                 <xsl:attribute name="rdf:resource"><xsl:value-of select="concat($bf,'Meeting')"/></xsl:attribute>
               </xsl:when>
             </xsl:choose>
