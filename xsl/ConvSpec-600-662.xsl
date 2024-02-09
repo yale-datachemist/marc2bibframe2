@@ -203,7 +203,7 @@
                     </rdf:type>
                     <xsl:if test="contains($pTopicUri, 'Topic69')">
                       <rdf:type>
-                        <xsl:attribute name="rdf:resource"><xsl:value-of select="concat('https://library.yale.edu/data/','LocalSubject')"/></xsl:attribute>
+                        <xsl:attribute name="rdf:resource"><xsl:value-of select="concat('https://library.yale.edu/vocab/','LocalSubject')"/></xsl:attribute>
                       </rdf:type>
                     </xsl:if>
                     <madsrdf:authoritativeLabel>
