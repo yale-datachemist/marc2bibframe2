@@ -135,7 +135,7 @@
                   <bf:Topic>
                     <xsl:if test="$pTopicUri != ''">
                       <xsl:attribute name="rdf:about"><xsl:value-of select="$pTopicUri"/></xsl:attribute>
-                    </xsl:if>
+                    </xsl:if>                                        
                     <rdf:type>
                       <xsl:attribute name="rdf:resource"><xsl:value-of select="concat($madsrdf,$vMADSClass)"/></xsl:attribute>
                     </rdf:type>
@@ -201,6 +201,11 @@
                     <rdf:type>
                       <xsl:attribute name="rdf:resource"><xsl:value-of select="concat($madsrdf,$vMADSClass)"/></xsl:attribute>
                     </rdf:type>
+                    <xsl:if test="contains($pTopicUri, 'Topic69')">
+                      <rdf:type>
+                        <xsl:attribute name="rdf:resource"><xsl:value-of select="concat('https://library.yale.edu/data/','LocalSubject')"/></xsl:attribute>
+                      </rdf:type>
+                    </xsl:if>
                     <madsrdf:authoritativeLabel>
                       <xsl:if test="$vXmlLang != ''">
                         <xsl:attribute name="xml:lang"><xsl:value-of select="$vXmlLang"/></xsl:attribute>
