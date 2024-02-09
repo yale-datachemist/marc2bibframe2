@@ -748,6 +748,7 @@
         <xsl:when test="$vTag='534'">orig</xsl:when>
         <xsl:when test="$vTag='536'">fundinfo</xsl:when>
         <xsl:when test="$vTag='544' or $vTag='581'">related</xsl:when>
+        <xsl:when test="$vTag='590'">local</xsl:when>
         <xsl:when test="$vTag='545'">
           <xsl:choose>
             <xsl:when test="@ind1='0'">biogdata</xsl:when>
