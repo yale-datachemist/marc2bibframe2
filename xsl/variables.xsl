@@ -7,7 +7,9 @@
   <!-- constants for marc2bibframe2.xsl -->
 
   <!-- Current marc2bibframe2 version -->
-  <xsl:variable name="vCurrentVersion">v2.5.0</xsl:variable>
+  <xsl:variable name="vCurrentVersion">v2.8.1</xsl:variable>
+  <xsl:variable name="vOntoVersionURI">http://id.loc.gov/ontologies/bibframe-2-4-0/</xsl:variable>
+  <xsl:variable name="vConvVersionURI">https://github.com/lcnetdev/marc2bibframe2/releases/tag/v2.8.1</xsl:variable>
 
   <!-- namespace URIs -->
   <xsl:variable name="bf">http://id.loc.gov/ontologies/bibframe/</xsl:variable>
@@ -38,6 +40,7 @@
   <xsl:variable name="marcmuscomp">http://id.loc.gov/vocabulary/marcmuscomp/</xsl:variable>
   <xsl:variable name="organizations">http://id.loc.gov/vocabulary/organizations/</xsl:variable>
   <xsl:variable name="relators">http://id.loc.gov/vocabulary/relators/</xsl:variable>
+  <xsl:variable name="resourceComponents">http://id.loc.gov/vocabulary/resourceComponents</xsl:variable>
   <xsl:variable name="mproduction">http://id.loc.gov/vocabulary/mproduction/</xsl:variable>
   <xsl:variable name="msoundcontent">http://id.loc.gov/vocabulary/msoundcontent/</xsl:variable>
   <xsl:variable name="mrecmedium">http://id.loc.gov/vocabulary/mrecmedium/</xsl:variable>
@@ -65,6 +68,9 @@
   <xsl:variable name="classG">http://id.loc.gov/authorities/classification/G</xsl:variable>
   <xsl:variable name="msupplcont">http://id.loc.gov/vocabulary/msupplcont/</xsl:variable>
   <xsl:variable name="mstatus">http://id.loc.gov/vocabulary/mstatus/</xsl:variable>
+  
+  <!-- other vocabulary stems -->
+  <xsl:variable name="deorgs">https://ld.zdb-services.de/resource/organisations/</xsl:variable>
 
   <!-- for upper- and lower-case translation (ASCII only) -->
   <xsl:variable name="lower">abcdefghijklmnopqrstuvwxyz</xsl:variable>

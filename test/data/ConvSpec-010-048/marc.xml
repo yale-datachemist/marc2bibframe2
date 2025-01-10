@@ -13,6 +13,7 @@
     </datafield>
     <datafield tag="015" ind1=" " ind2=" ">
       <subfield code="a">F67-835 (v. 1)</subfield>
+      <subfield code="2">ASDVF</subfield>
     </datafield>
     <datafield tag="016" ind1=" " ind2=" ">
       <subfield code="a"> 730032015  rev</subfield>
@@ -145,6 +146,8 @@
     <datafield tag="035" ind1=" " ind2=" ">
       <subfield code="a">(OCoLC)814782</subfield>
       <subfield code="z">(OCoLC)7374506</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
       <subfield code="z">(RS-BeBCD)12345</subfield>
     </datafield>
     <datafield tag="036" ind1=" " ind2=" ">

@@ -82,6 +82,7 @@
   
   <xsl:template match="marc:controlfield[@tag='008']" mode="adminmetadata">
     <xsl:param name="serialization" select="'rdfxml'"/>
+    <!--
     <xsl:variable name="marcYear" select="substring(.,1,2)"/>
     <xsl:variable name="creationYear">
       <xsl:choose>
@@ -97,6 +98,7 @@
         </bf:creationDate>
       </xsl:when>
     </xsl:choose>
+    -->
     <!-- continuing resources -->
     <xsl:if test="substring(../marc:leader,7,1) = 'a' and
                   (substring(../marc:leader,8,1) = 'b' or
@@ -218,9 +220,7 @@
       <xsl:when test="$serialization = 'rdfxml'">
         <xsl:if test="$language != ''">
           <bf:language>
-            <bf:Language>
-              <xsl:attribute name="rdf:about"><xsl:value-of select="concat($languages,$language)"/></xsl:attribute>
-            </bf:Language>
+              <xsl:attribute name="rdf:resource"><xsl:value-of select="concat($languages,$language)"/></xsl:attribute>
           </bf:language>
         </xsl:if>
       </xsl:when>
@@ -606,17 +606,21 @@
         </xsl:choose>
       </xsl:variable>
       <xsl:variable name="v655" select="../marc:datafield[@tag='655' and marc:subfield[@code='2']='lcgft']/marc:subfield[@code='a']" />
+      <xsl:variable name="v353" select="../marc:datafield[@tag='353']/marc:subfield[@code='a']" />
       <xsl:for-each select="$codeMaps/maps/marcgt/*[name() = substring($contents,$i,1)] |
                             $codeMaps/maps/marcgt/*[name() = concat('x',substring($contents,$i,1))]">
         <xsl:variable name="vMarcgtText" select="." />
         <xsl:choose>
           <xsl:when test="
               (
-                $vProperty='bf:supplementaryContent' or 
+                (
+                    $vProperty='bf:supplementaryContent' and
+                    not($v353[.=$vMarcgtText])
+                ) or 
                 (
                   $vProperty='bf:genreForm' and 
-                  not($v655[.!=$vMarcgtText]) and 
-                  not($v655[.!=concat($vMarcgtText, '.')])
+                  not($v655[.=$vMarcgtText]) and 
+                  not($v655[.=concat($vMarcgtText, '.')])
                  )
                ) and 
               $serialization = 'rdfxml'">
@@ -741,9 +745,10 @@
   <xsl:template name="musicFormat008">
     <xsl:param name="serialization" select="'rdfxml'"/>
     <xsl:param name="code"/>
+    <xsl:variable name="df348-as" select="../marc:datafield[@tag = '348']/marc:subfield[@code = 'a']" />
     <xsl:for-each select="$codeMaps/maps/musicFormat/*[name() = $code]">
       <xsl:choose>
-        <xsl:when test="$serialization = 'rdfxml'">
+        <xsl:when test="$serialization = 'rdfxml' and (count($df348-as)=0 or $df348-as[text() != .])">
           <bf:musicFormat>
             <bf:MusicFormat>
               <xsl:if test="@href != ''">
@@ -762,10 +767,15 @@
     <xsl:param name="serialization" select="'rdfxml'"/>
     <xsl:param name="accomp"/>
     <xsl:param name="i" select="1"/>
+    <xsl:variable name="df353-bs" select="../marc:datafield[@tag = '348']/marc:subfield[@code = 'b']" />
+    <xsl:variable name="df353-0s" select="../marc:datafield[@tag = '348']/marc:subfield[@code = '0']" />
     <xsl:if test="$i &lt; 7">
       <xsl:for-each select="$codeMaps/maps/musicSuppContent/*[name() = substring($accomp,$i,1)]">
         <xsl:choose>
-          <xsl:when test="$serialization = 'rdfxml'">
+          <xsl:when test="$serialization = 'rdfxml' and (
+                                                (count($df353-0s)=0 and count($df353-bs)=0) or 
+                                                ($df353-0s[text() != @href] and not(contains(@href, $df353-bs/text())))
+                                           )">
             <bf:supplementaryContent>
               <bf:SupplementaryContent>
                 <xsl:if test="@href">
@@ -1248,7 +1258,8 @@
   <xsl:template name="index008">
     <xsl:param name="serialization" select="'rdfxml'"/>
     <xsl:param name="code"/>
-    <xsl:if test="$code = '1'">
+    <xsl:variable name="v353" select="../marc:datafield[@tag='353']/marc:subfield[@code='a']" />
+    <xsl:if test="$code = '1' and not($v353[.!='index'])">
       <xsl:choose>
         <xsl:when test="$serialization = 'rdfxml'">
           <bf:supplementaryContent>

@@ -683,9 +683,32 @@
                 </rdfs:label>
               </xsl:if>
               <xsl:if test="following-sibling::marc:subfield[position()=1]/@code = '0'">
-                <xsl:apply-templates select="following-sibling::marc:subfield[position()=1]" mode="subfield0orw">
-                  <xsl:with-param name="serialization" select="$serialization"/>
-                </xsl:apply-templates>
+                <xsl:choose>
+                  <xsl:when test="contains(following-sibling::marc:subfield[position()=1], '://')">
+                    <xsl:variable name="the0">
+                      <xsl:choose>
+                        <xsl:when test="starts-with(following-sibling::marc:subfield[position()=1],'(uri)')">
+                          <xsl:value-of select="substring-after(following-sibling::marc:subfield[position()=1],'(uri)')"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:value-of select="following-sibling::marc:subfield[position()=1]"/>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </xsl:variable>
+                    <xsl:if test="$the0 != concat($pUriStem,$encoded)">
+                      <madsrdf:hasRelatedAuthority>
+                        <xsl:attribute name="rdf:resource">
+                          <xsl:value-of select="$the0"/>
+                        </xsl:attribute>
+                      </madsrdf:hasRelatedAuthority>
+                    </xsl:if>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates select="following-sibling::marc:subfield[position()=1]" mode="subfield0orw">
+                      <xsl:with-param name="serialization" select="$serialization"/>
+                    </xsl:apply-templates>
+                  </xsl:otherwise>
+                </xsl:choose>
               </xsl:if>
               <xsl:for-each select="../marc:subfield[@code='2']">
                 <xsl:variable name="vCode">
@@ -710,7 +733,7 @@
         <xsl:for-each select="marc:subfield[@code='a']">
           <xsl:if test="following-sibling::marc:subfield[position()=1]/@code != 'b'">
             <xsl:variable name="tA" select="." />
-            <xsl:variable name="mtURI" select="($codeMaps/maps/mediaTypes/*[. = $tA]/@href|$codeMaps/maps/carriers/*[. = $tA]/@href)[1]" />
+            <xsl:variable name="mtURI" select="($codeMaps/maps/mediaTypes/*[. = $tA]/@href|$codeMaps/maps/carriers/*[. = $tA]/@href|$codeMaps/maps/contentTypes/*[. = $tA]/@href)[1]" />
             <xsl:element name="{$pProp}">
               <xsl:element name="{$pResource}">
                 <xsl:if test="$mtURI!=''">
@@ -825,7 +848,7 @@
             </xsl:if>
             <xsl:call-template name="tChopPunct">
               <xsl:with-param name="pString" select="."/>
-              <xsl:with-param name="pEndPunct" select="':;,/=+'"/>
+              <xsl:with-param name="pEndPunct" select="':;,/=+.'"/>
             </xsl:call-template>
           </bf:dimensions>
         </xsl:for-each>
@@ -1025,10 +1048,22 @@
                 </xsl:otherwise>
               </xsl:choose>
               <xsl:for-each select="following-sibling::marc:subfield[@code='0' and generate-id(preceding-sibling::marc:subfield[@code != '0'][1])=$vCurrentNode and contains(text(),'://')]">
-                <xsl:if test="position() != 1">
-                  <xsl:apply-templates select="." mode="subfield0orw">
-                    <xsl:with-param name="serialization" select="$serialization"/>
-                  </xsl:apply-templates>
+                <xsl:variable name="the0">
+                  <xsl:choose>
+                    <xsl:when test="starts-with(.,'(uri)')">
+                      <xsl:value-of select="substring-after(.,'(uri)')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="."/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:variable>
+                <xsl:if test="$the0 != $vCurrentNodeUri">
+                  <madsrdf:hasRelatedAuthority>
+                    <xsl:attribute name="rdf:resource">
+                      <xsl:value-of select="$the0"/>
+                    </xsl:attribute>
+                  </madsrdf:hasRelatedAuthority>
                 </xsl:if>
               </xsl:for-each>
               <xsl:apply-templates select="following-sibling::marc:subfield[@code='0' and generate-id(preceding-sibling::marc:subfield[@code != '0'][1])=$vCurrentNode and not(contains(text(),'://'))]" mode="subfield0orw">
@@ -1079,8 +1114,7 @@
   <xsl:template match="marc:datafield[@tag='344' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='344')] |
                        marc:datafield[@tag='345' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='345')] |
                        marc:datafield[@tag='346' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='346')] |
-                       marc:datafield[@tag='347' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='347')] |
-                       marc:datafield[@tag='348' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='348')]"
+                       marc:datafield[@tag='347' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='347')]"
                 mode="instance">
     <xsl:param name="serialization" select="'rdfxml'"/>
     <xsl:param name="pInstanceType" />
@@ -1238,6 +1272,99 @@
                   <xsl:when test="text()='NAB standard'">
                     <xsl:value-of select="concat($mspecplayback,'nab')"/>
                   </xsl:when>
+                  <xsl:when test="text()='Dolby Digital'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='Dolby Digital 5.1'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='Dolby Digital 2.0'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig2')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='Dolby digital'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='DTS-HD Master Audio 5.1'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='5.1 Dolby Digital'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='DTS-HD Master Audio'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='Dolby digital 5.1'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='DTS'">
+                    <xsl:value-of select="concat($mspecplayback,'dts')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='2.0 Dolby Digital'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig2')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='5.1 DTS-HD Master Audio'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='Dolby digital 2.0'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig2')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='5.1 DTS-HD MA'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='DTS-HD Master Audio 7.1'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd71')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='DTS 5.1'">
+                    <xsl:value-of select="concat($mspecplayback,'dts51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='Dolby Digital 1.0'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig1')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='PCM'">
+                    <xsl:value-of select="concat($mspecplayback,'pcm')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='DTS-HD master audio'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='DTS-HD MA 5.1'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='DTS-HD MA'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='5.1 Dolby digital'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='DTS-HD master audio 5.1'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='7.1 DTS-HD Master Audio'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd71')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='PCM uncompressed'">
+                    <xsl:value-of select="concat($mspecplayback,'pcmunc')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='PCM 5.1'">
+                    <xsl:value-of select="concat($mspecplayback,'pcm51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='7.1 DTS-HD MA'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd71')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='2.0 Dolby digital'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig2')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='5.1 DTS-HD Master audio'">
+                    <xsl:value-of select="concat($mspecplayback,'dtshd51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='5.1 DTS'">
+                    <xsl:value-of select="concat($mspecplayback,'dts51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='Dolby 5.1'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig51')"/>
+                  </xsl:when>
+                  <xsl:when test="text()='Dolby 2.0'">
+                    <xsl:value-of select="concat($mspecplayback,'dolbydig2')"/>
+                  </xsl:when>
                 </xsl:choose>
               </xsl:when>
               <xsl:when test="@code='i'">
@@ -1391,11 +1518,23 @@
                   <xsl:value-of select="normalize-space(translate(translate(normalize-space(.),$upper,$lower),'-',''))"/>
                 </xsl:variable>
                 <xsl:choose>
+                  <xsl:when test="contains($vNormalizedFormat,'cd aud')">
+                    <xsl:value-of select="concat($mencformat,'cda')"/>
+                  </xsl:when>
                   <xsl:when test="contains($vNormalizedFormat,'bluray')">
                     <xsl:value-of select="concat($mencformat,'bluray')"/>
                   </xsl:when>
                   <xsl:when test="contains($vNormalizedFormat,'dvd')">
                     <xsl:value-of select="concat($mencformat,'dvdv')"/>
+                  </xsl:when>
+                  <xsl:when test="contains($vNormalizedFormat,'sacd')">
+                    <xsl:value-of select="concat($mencformat,'sacd')"/>
+                  </xsl:when>
+                  <xsl:when test="contains($vNormalizedFormat,'mp3')">
+                    <xsl:value-of select="concat($mencformat,'mp3')"/>
+                  </xsl:when>
+                  <xsl:when test="contains($vNormalizedFormat,'pdf')">
+                    <xsl:value-of select="concat($mencformat,'pdf')"/>
                   </xsl:when>
                 </xsl:choose>
               </xsl:when>
@@ -1528,6 +1667,7 @@
     </xsl:for-each>
   </xsl:template>
   
+  <!--
   <xsl:template match="marc:datafield[@tag='350' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='350')]" mode="instance">
     <xsl:param name="serialization" select="'rdfxml'"/>
     <xsl:variable name="vXmlLang"><xsl:apply-templates select="." mode="xmllang"/></xsl:variable>
@@ -1550,6 +1690,7 @@
       </xsl:when>
     </xsl:choose>
   </xsl:template>
+  -->
   
   <xsl:template match="marc:datafield[@tag='352' or (@tag='880' and substring(marc:subfield[@code='6'],1,3)='352')]" mode="instance">
     <xsl:param name="serialization" select="'rdfxml'"/>

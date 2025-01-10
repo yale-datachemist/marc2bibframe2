@@ -1,5 +1,53 @@
 # marc2bibframe2 release notes
 
+## v2.8.1
+
+Patch release.
+
+* [Address XPath test issue in xsltproc.](https://github.com/lcnetdev/marc2bibframe2/issues/253)
+
+## v2.8.0
+
+Conversion updates based on specifications v2.8. See the Library of Congress’s [BIBFRAME site](https://www.loc.gov/bibframe/) for more details. Specifications are included in the distribution in the [spec](spec/) directory. Changes of note:
+
+* Conversion of MARC 880 fields for agents, which were previously not converted.
+* Conversion of MARC 880 fields for variant titles (MARC 246, 247, 740), which were previously not converted.
+* Added conversion of UDC classification numbers in MARC 080 field.
+* Bibliographical notes in MARC 504 fields are now converted as notes instead of as supplementary content.
+* Adjustmented the creation of relationships to use the vocabulary at https://id.loc.gov/vocabulary/relationship.html instead of BIBFRAME properties.
+* Retention of MARC 040 field as a note in Admin Metadata.
+* Refined conversion of MARC 7XX fields that have data in $i and Ind2=2 to selectively create resources with a “part” relationship.
+
+See the [NEWS](NEWS) file and the [updated specifications](spec/) for full details of changes. Changes from v2.7.0 in the specifications are marked in red.
+
+
+## v2.7.0
+
+Conversion updates based on specifications v2.7. See the Library of Congress’s [BIBFRAME site](https://www.loc.gov/bibframe/) for more details. Specifications are included in the distribution in the [spec](spec/) directory. Changes of note:
+
+* New conversion of relationships and related works to mirror the existing contribution-role modeling of agents.
+* New conversion of language resources in MARC 041 field to create language-specific notes or language-specific accompanying resources according to the information in each subfield.
+* Identifiers from OCLC in MARC 035 field are assigned to the new Identifier class bf:OclcNumber to facilitate data exchange activities.
+* Classification numbers from the National Agriculture Library in MARC 070 field are assigned to the new classification class bf:ClassificationNal
+* Title information from MARC 1XX fields is now converted.
+* Further refinements to the creation of Series Hubs from 490 fields.
+
+See the [NEWS](NEWS) file and the [updated specifications](spec/) for full details of changes. Changes from v2.6.0 in the specifications are marked in red.
+
+
+## v2.6.0
+
+Conversion updates based on specifications v2.6. See the Library of Congress’s [BIBFRAME site](https://www.loc.gov/bibframe/) for more details. Specifications are included in the distribution in the [spec](spec/) directory. Changes of note:
+
+* New conversion of $1 in authorized access points
+* Revised creation of Admin Metadata to create four distinct resources
+* More selective conversion of MARC 015 field to exclude placeholder numbers (e.g. "GB***") and numbers without source fields
+* Better handling of bf:acquisitionTerms literals from MARC 020/024 $c
+
+
+See the [NEWS](NEWS) file and the [updated specifications](spec/) for full details of changes. Changes from v2.5.0 in the specifications are marked in red.
+
+
 ## v2.5.0
 
 Conversion updates based on specifications v2.5. See the Library of Congress’s [BIBFRAME site](https://www.loc.gov/bibframe/) for more details. Specifications are included in the distribution in the [spec](spec/) directory. Changes of note:

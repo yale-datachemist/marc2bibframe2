@@ -27,14 +27,15 @@
 
     <x:scenario label="ALL MATERIALS">
       <x:context href="data/ConvSpec-006,008/marc.xml"/>
-      <x:expect label="pos 0-5 should set the AdminMetadata creationDate property of the Work" test="//bf:Work[1]/bf:adminMetadata/bf:AdminMetadata/bf:creationDate = '2004-05-20'"/>
+      <x:expect label="pos 0-5 should set the AdminMetadata to type 'create'" test="//bf:Work[1]/bf:adminMetadata[1]/bf:AdminMetadata/bf:status/bf:Status/@rdf:about = 'http://id.loc.gov/vocabulary/mstatus/n'"/>
+      <x:expect label="pos 0-5 should set the AdminMetadata date property of the 'create' AM" test="//bf:Work[1]/bf:adminMetadata[1]/bf:AdminMetadata/bf:date = '2004-05-20'"/>
       <x:expect label="pos 6-14 date handling" test="//bf:Instance[1]/bf:provisionActivity/bf:ProvisionActivity/bf:date = '200X'"/>
       <x:expect label="c or d in pos 6 adds a status" test="//bf:Instance[7]/bf:provisionActivity/bf:ProvisionActivity/bf:status/bf:Status/rdfs:label = 'ceased'"/>
       <x:expect label="...with URI" test="//bf:Instance[7]/bf:provisionActivity/bf:ProvisionActivity/bf:status/bf:Status/@rdf:about = 'http://id.loc.gov/vocabulary/mstatus/ceased'"/>
       <x:expect label="| in pos 6 handled like s or m" test="//bf:Instance[10]/bf:provisionActivity/bf:ProvisionActivity/bf:date = '1981'"/>
       <x:expect label="pos 15-17 publication place" test="//bf:Instance[1]/bf:provisionActivity/bf:ProvisionActivity/bf:place/@rdf:resource='http://id.loc.gov/vocabulary/countries/dk'"/>
       <x:expect label="||| in pos 15-17 should not create ProvisionActivity/place" test="not(//bf:Instance[10]/bf:provisionActivity/bf:ProvisionActivity/bf:place)"/>
-      <x:expect label="pos 35-37 should set the language property of the Work" test="//bf:Work[1]/bf:language/bf:Language/@rdf:about = 'http://id.loc.gov/vocabulary/languages/dan'"/>
+      <x:expect label="pos 35-37 should set the language property of the Work" test="//bf:Work[1]/bf:language/@rdf:resource = 'http://id.loc.gov/vocabulary/languages/dan'"/>
     </x:scenario>
 
     <x:scenario label="BOOKS">
@@ -136,6 +137,13 @@
       </marc:record>
     </x:context>
     <x:expect label="Return the carrier URI from the 008" select="'http://id.loc.gov/vocabulary/carriers/cz'"/>
+  </x:scenario>
+  
+  <x:scenario label="008 - DATES">
+    <x:context href="data/ConvSpec-006,008/marc.xml"/>
+    <x:expect label="s date" test="//bf:Instance[15]/bf:provisionActivity/bf:ProvisionActivity/bf:date[@rdf:datatype='http://id.loc.gov/datatypes/edtf']='2002'"/>
+    <x:expect label="m date" test="//bf:Instance[16]/bf:provisionActivity/bf:ProvisionActivity/bf:date[@rdf:datatype='http://id.loc.gov/datatypes/edtf']='2013/2016'"/>
+    <x:expect label="q date" test="//bf:Instance[17]/bf:provisionActivity/bf:ProvisionActivity/bf:date[@rdf:datatype='http://id.loc.gov/datatypes/edtf']='1900~/1956~'"/>
   </x:scenario>
 
 </x:description>

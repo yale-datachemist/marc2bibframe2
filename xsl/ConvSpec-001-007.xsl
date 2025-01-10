@@ -43,6 +43,7 @@
     </xsl:choose>
   </xsl:template>
   
+  <!--
   <xsl:template match="marc:controlfield[@tag='005']" mode="adminmetadata">
     <xsl:param name="serialization" select="'rdfxml'"/>
     <xsl:variable name="changeDate" select="concat(substring(.,1,4),'-',substring(.,5,2),'-',substring(.,7,2),'T',substring(.,9,2),':',substring(.,11,2),':',substring(.,13,2))"/>
@@ -57,10 +58,12 @@
       </xsl:choose>
     </xsl:if>
   </xsl:template>
+  -->
 
   <xsl:template match="marc:controlfield[@tag='007']" mode="work">
     <xsl:param name="serialization" select="'rdfxml'"/>
     <xsl:variable name="vNodeId" select="generate-id(.)"/>
+    <!--
     <xsl:variable name="workType">
       <xsl:choose>
         <xsl:when test="contains('ad',substring(.,1,1)) and
@@ -89,6 +92,7 @@
         </xsl:when>
       </xsl:choose>
     </xsl:if>
+    -->
     <xsl:variable name="vContentType">
       <xsl:choose>
         <xsl:when test="substring(.,1,1) = 'a'">
