@@ -776,7 +776,7 @@
             </xsl:if>
           </xsl:if>
           <!-- marcKey -->
-          <xsl:if test="substring($tag,2,2)='00' or substring($tag,2,2)='10' or substring($tag,2,2)='11'">
+          <xsl:if test="substring($tag,2,2)='00' or substring($tag,2,2)='10' or substring($tag,2,2)='11' or substring($tag,2,2)='92'">
               <xsl:choose>
                   <xsl:when test="substring($tag,1,1)='1' and marc:subfield[@code='k'] and not(../marc:datafield[@tag='240'])">
                     <xsl:variable name="vDF1xx"><xsl:apply-templates select="." mode="marcKey"/></xsl:variable>
@@ -1005,7 +1005,7 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="$tag='720'"><xsl:value-of select="marc:subfield[@code='a']"/></xsl:when>
-      <xsl:when test="substring($tag,2,2)='00'">
+      <xsl:when test="substring($tag,2,2)='00' or substring($tag,2,2)='92'">
         <xsl:choose>
           <xsl:when test="marc:subfield[@code='t']">
             <!-- This will occur in 7XX fields, e.g. -->
@@ -1029,6 +1029,7 @@
                                      @code='q']"/>
           </xsl:when>
           <xsl:otherwise>
+            
             <xsl:apply-templates mode="concat-nodes-space"
                              select="marc:subfield[@code='a' or
                                      @code='b' or 

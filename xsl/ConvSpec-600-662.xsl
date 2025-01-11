@@ -107,7 +107,10 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="vNameLabel">
-      <xsl:apply-templates select="." mode="tNameLabel"/>
+      <xsl:if test="$vTag!='692'">
+        <xsl:apply-templates select="." mode="tNameLabel"/>  
+      </xsl:if>      
+      
     </xsl:variable>
     <xsl:variable name="vTitleLabel">
       <xsl:apply-templates select="." mode="tTitleLabel"/>
@@ -283,6 +286,7 @@
                       <xsl:if test="$vXmlLang != ''">
                         <xsl:attribute name="xml:lang"><xsl:value-of select="$vXmlLang"/></xsl:attribute>
                       </xsl:if>
+                      <!-- SEE HERE -->
                       <xsl:value-of select="$vMADSLabel"/>
                     </madsrdf:authoritativeLabel>
                     <xsl:copy-of select="$v880Label"/>
@@ -303,6 +307,7 @@
                         <xsl:with-param name="recordid" select="$recordid"/>
                         <xsl:with-param name="pMADSClass" select="$vMADSNameClass"/>
                         <xsl:with-param name="pMADSLabel">
+                          
                           <xsl:call-template name="tChopPunct">
                             <xsl:with-param name="pString" select="normalize-space(concat($vNameLabel,' ',$vTitleLabel))"/>
                           </xsl:call-template>
@@ -773,7 +778,7 @@
         <xsl:when test="$vTag='655'">GenreForm</xsl:when>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="vLabel">
+    <xsl:variable name="vLabel">      
       <xsl:call-template name="tChopPunct">
         <xsl:with-param name="pEndPunct" select="'.'" />
         <xsl:with-param name="pString">
@@ -922,7 +927,7 @@
               <xsl:if test="$vXmlLang != ''">
                 <xsl:attribute name="xml:lang"><xsl:value-of select="$vXmlLang"/></xsl:attribute>
               </xsl:if>
-              <xsl:value-of select="$vLabel"/>
+              <xsl:value-of select="$vLabel"/>              
             </rdfs:label>
             <madsrdf:authoritativeLabel>
               <xsl:if test="$vXmlLang != ''">
@@ -1005,11 +1010,15 @@
                     </xsl:apply-templates>
                   </xsl:when>
                   <xsl:otherwise>
+                    
                     <xsl:apply-templates select="marc:subfield[@code='a' or @code='v' or @code='x' or @code='y' or @code='z']" mode="complexSubject">
                       <xsl:with-param name="serialization" select="$serialization"/>
+                      <!-- SEE HERE -->
+                      
                       <xsl:with-param name="pTag" select="$vTag"/>
                       <xsl:with-param name="pXmlLang" select="$vXmlLang"/>
                       <xsl:with-param name="pRelated880s" select="$vRelated880s" />
+                      
                     </xsl:apply-templates>
                   </xsl:otherwise>
                 </xsl:choose>
